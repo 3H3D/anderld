@@ -1,5 +1,5 @@
 // =========================================================================
-// KONTROL SUPABASE (AMAN UNTUK GITHUB PUBLIK DENGAN RLS AKTIF)
+// SUPABASE CONFIG (AMAN UNTUK GITHUB PUBLIK SELAMA RLS AKTIF)
 // =========================================================================
 const SUPABASE_URL = "https://PROJECT_ID_ANDA.supabase.co";
 const SUPABASE_ANON_KEY = "SUPABASE_ANON_PUBLIC_KEY_ANDA";
@@ -9,25 +9,64 @@ const supabaseClient =
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
 
-const fallbackTracks = [
-  { id: "1", title: "TORU RE", release_type: "Single", release_year: "2026", spotify_url: "https://open.spotify.com", youtube_url: "https://music.youtube.com" },
-  { id: "2", title: "Kwiregtori", release_type: "Single", release_year: "2026", spotify_url: "https://open.spotify.com", youtube_url: "https://music.youtube.com" },
-  { id: "3", title: "Sogdai Ya", release_type: "Single", release_year: "2026", spotify_url: "https://open.spotify.com", youtube_url: "https://music.youtube.com" }
+const defaultCatalog = [
+  {
+    id: "1",
+    title: "TORU RE",
+    release_type: "Single",
+    release_year: "2026",
+    cover_url: "",
+    audio_url: "",
+    spotify_url: "https://open.spotify.com",
+    apple_url: "https://music.apple.com",
+    youtube_url: "https://music.youtube.com",
+    is_featured: true
+  },
+  {
+    id: "2",
+    title: "Kwiregtori",
+    release_type: "Single",
+    release_year: "2026",
+    cover_url: "",
+    audio_url: "",
+    spotify_url: "https://open.spotify.com",
+    apple_url: "https://music.apple.com",
+    youtube_url: "https://music.youtube.com",
+    is_featured: false
+  },
+  {
+    id: "3",
+    title: "Sogdai Ya",
+    release_type: "Single",
+    release_year: "2026",
+    cover_url: "",
+    audio_url: "",
+    spotify_url: "https://open.spotify.com",
+    apple_url: "https://music.apple.com",
+    youtube_url: "https://music.youtube.com",
+    is_featured: false
+  }
 ];
 
-let tracks = [];
-let currentIndex = -1;
+let releases = [];
+let activeIdx = -1;
 let isPlaying = false;
 let audioCtx = null;
-let synthInterval = null;
+let synthTimer = null;
 
-const releaseStack = document.getElementById("releaseStack");
-const miniPlayer = document.getElementById("miniPlayer");
-const playerTitle = document.getElementById("playerTitle");
-const playerStatus = document.getElementById("playerStatus");
-const playToggleBtn = document.getElementById("playToggleBtn");
-const closePlayerBtn = document.getElementById("closePlayerBtn");
-const audioElement = document.getElementById("audioElement");
+// DOM
+const featuredCover = document.getElementById("featuredCover");
+const featuredArtText = document.getElementById("featuredArtText");
+const featuredTitle = document.getElementById("featuredTitle");
+const featuredPlayBtn = document.getElementById("featuredPlayBtn");
+const featuredDsps = document.getElementById("featuredDsps");
+const musicGrid = document.getElementById("musicGrid");
+
+const audioBar = document.getElementById("audioBar");
+const npTitle = document.getElementById("npTitle");
+const npToggleBtn = document.getElementById("npToggleBtn");
+const npCloseBtn = document.getElementById("npCloseBtn");
+const audioPlayer = document.getElementById("audioPlayer");
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -47,31 +86,68 @@ async function init() {
       .eq("is_published", true)
       .order("sort_order", { ascending: true });
 
-    tracks = !error && data && data.length > 0 ? data : fallbackTracks;
+    releases = !error && data && data.length > 0 ? data : defaultCatalog;
   } else {
-    tracks = fallbackTracks;
+    releases = defaultCatalog;
   }
 
-  renderReleases();
+  renderFeatured();
+  renderGrid();
 }
 
-function renderReleases() {
-  releaseStack.innerHTML = tracks
-    .map((track, idx) => {
-      const playing = idx === currentIndex && isPlaying;
+function renderFeatured() {
+  const fIndex = releases.findIndex((item) => item.is_featured);
+  const idx = fIndex !== -1 ? fIndex : 0;
+  const item = releases[idx];
+  if (!item) return;
+
+  featuredTitle.textContent = item.title;
+  featuredArtText.textContent = item.title;
+
+  if (item.cover_url) {
+    featuredCover.style.backgroundImage = `url('${encodeURI(item.cover_url)}')`;
+    featuredCover.classList.add("has-img");
+  }
+
+  featuredPlayBtn.disabled = false;
+  featuredPlayBtn.onclick = () => playOrPause(idx);
+
+  const links = [];
+  if (item.spotify_url) links.push(`<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>`);
+  if (item.apple_url) links.push(`<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener noreferrer">APPLE MUSIC</a>`);
+  if (item.youtube_url) links.push(`<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC</a>`);
+  if (links.length) featuredDsps.innerHTML = links.join("");
+}
+
+function renderGrid() {
+  musicGrid.innerHTML = releases
+    .map((item, idx) => {
+      const playing = idx === activeIdx && isPlaying;
+      const bg = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
+      const fallback = item.cover_url
+        ? ""
+        : `<div class="card-cover-fallback">
+             <span>ANDER</span>
+             <strong>${escapeHTML(item.title)}</strong>
+           </div>`;
+
       return `
-        <div class="release-row">
-          <div class="release-info">
-            <h3>${escapeHTML(track.title)}</h3>
-            <span>${escapeHTML(track.release_type || "Single")} &bull; ${escapeHTML(track.release_year || "2026")}</span>
+        <div class="release-card ${playing ? "is-playing" : ""}">
+          <div class="card-cover" ${bg}>
+            ${fallback}
+            <div class="card-overlay">
+              <button class="overlay-btn" onclick="playOrPause(${idx})">
+                ${playing ? "PAUSE" : "LISTEN"}
+              </button>
+            </div>
           </div>
-          <div class="release-actions">
-            <button class="btn-play" onclick="toggleTrack(${idx})">
-              ${playing ? "Jeda" : "Putar"}
-            </button>
-            <div class="dsp-links">
-              ${track.spotify_url ? `<a href="${escapeHTML(track.spotify_url)}" target="_blank" rel="noopener">Spotify</a>` : ""}
-              ${track.youtube_url ? `<a href="${escapeHTML(track.youtube_url)}" target="_blank" rel="noopener">YouTube</a>` : ""}
+          <div class="card-meta">
+            <h3>${escapeHTML(item.title)}</h3>
+            <p>${escapeHTML(item.release_type || "Single")} &bull; ${escapeHTML(item.release_year || "2026")}</p>
+            <div class="card-links">
+              ${item.spotify_url ? `<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>` : ""}
+              ${item.apple_url ? `<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener noreferrer">APPLE</a>` : ""}
+              ${item.youtube_url ? `<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener noreferrer">YOUTUBE</a>` : ""}
             </div>
           </div>
         </div>
@@ -80,30 +156,29 @@ function renderReleases() {
     .join("");
 }
 
-function stopAudio() {
+function stopPlayback(hideBar = false) {
   isPlaying = false;
-  clearInterval(synthInterval);
-  audioElement.pause();
-  audioElement.currentTime = 0;
-  miniPlayer.classList.remove("visible");
-  renderReleases();
+  clearInterval(synthTimer);
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+  npToggleBtn.textContent = "PLAY";
+  if (hideBar) audioBar.classList.remove("active");
+  renderGrid();
 }
 
-function playSynth() {
+function startSynth() {
   const notes = [261.63, 329.63, 392.0, 329.63];
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === "suspended") audioCtx.resume();
 
   let step = 0;
-  synthInterval = setInterval(() => {
+  synthTimer = setInterval(() => {
     if (!isPlaying) return;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.type = "sine";
+    osc.type = "triangle";
     osc.frequency.value = notes[step % notes.length];
-    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -113,46 +188,38 @@ function playSynth() {
   }, 600);
 }
 
-function toggleTrack(idx) {
-  if (currentIndex === idx && isPlaying) {
-    stopAudio();
+function playOrPause(idx) {
+  if (activeIdx === idx && isPlaying) {
+    stopPlayback(false);
     return;
   }
 
-  stopAudio();
-  currentIndex = idx;
+  stopPlayback(false);
+  activeIdx = idx;
   isPlaying = true;
-  const track = tracks[idx];
+  const item = releases[idx];
 
-  playerTitle.textContent = track.title;
-  playerStatus.textContent = "Memutar pratinjau";
-  playToggleBtn.textContent = "Jeda";
-  miniPlayer.classList.add("visible");
-  renderReleases();
+  npTitle.textContent = item.title;
+  npToggleBtn.textContent = "PAUSE";
+  audioBar.classList.add("active");
+  renderGrid();
 
-  if (track.audio_url) {
-    audioElement.src = track.audio_url;
-    audioElement.play();
-    audioElement.onended = stopAudio;
+  if (item.audio_url) {
+    audioPlayer.src = item.audio_url;
+    audioPlayer.play();
+    audioPlayer.onended = () => stopPlayback(false);
   } else {
-    playSynth();
+    startSynth();
   }
 }
 
-playToggleBtn.addEventListener("click", () => {
-  if (currentIndex !== -1) {
-    if (isPlaying) {
-      stopAudio();
-      playToggleBtn.textContent = "Putar";
-    } else {
-      toggleTrack(currentIndex);
-    }
-  }
+npToggleBtn.addEventListener("click", () => {
+  if (activeIdx !== -1) playOrPause(activeIdx);
 });
 
-closePlayerBtn.addEventListener("click", () => {
-  stopAudio();
-  currentIndex = -1;
+npCloseBtn.addEventListener("click", () => {
+  stopPlayback(true);
+  activeIdx = -1;
 });
 
 init();
