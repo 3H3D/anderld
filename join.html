@@ -15,7 +15,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
       padding: 1.5rem 2.5rem; background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(8px); border-bottom: 1px solid #ffffff;
+      backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a;
     }
     .artist-mark { font-size: 1.25rem; font-weight: 900; letter-spacing: 0.25em; }
     .menu-items { display: flex; gap: 2.5rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.18em; color: #aaaaaa; }
@@ -25,14 +25,32 @@
     .page-title { font-size: 2rem; font-weight: 900; letter-spacing: 0.2em; margin-bottom: 1.5rem; }
     .join-desc { color: #cccccc; margin-bottom: 2.5rem; font-size: 1rem; line-height: 1.7; }
 
-    .subscribe-form { display: flex; border: 1px solid #ffffff; }
+    .subscribe-form { display: flex; border: 1px solid #ffffff; margin-bottom: 2rem; }
     .subscribe-form input { flex: 1; background: #000000; border: none; color: #ffffff; padding: 1.1rem 1.25rem; font-size: 0.9rem; outline: none; }
     .subscribe-form input::placeholder { color: #777777; letter-spacing: 0.08em; }
     .subscribe-form button { background: #ffffff; color: #000000; border: none; padding: 1.1rem 2rem; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.18em; transition: opacity 0.2s; }
     .subscribe-form button:hover { opacity: 0.85; }
-    .subscribe-feedback { margin-top: 1rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; color: #ffffff; min-height: 1.5rem; }
+    .subscribe-feedback { margin-top: -1rem; margin-bottom: 2rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; color: #ffffff; min-height: 1.5rem; }
 
-    .stream-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #777777; margin-top: 8rem; border-top: 1px solid #333; padding-top: 2rem; }
+    /* Footer Terstruktur Rapi */
+    .site-footer {
+      border-top: 1px solid #333333;
+      padding-top: 2rem;
+      margin-top: 6rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #777777;
+      align-items: center;
+    }
+    .footer-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
 
     @media (max-width: 768px) {
       .subscribe-form { flex-direction: column; border: none; }
@@ -41,6 +59,7 @@
       .top-bar { padding: 1.25rem 1.5rem; }
       .menu-items { gap: 1.25rem; }
       .main-container { padding: 7rem 1.5rem 4rem; }
+      .site-footer { flex-direction: column; text-align: center; gap: 0.75rem; }
     }
   </style>
 </head>
@@ -68,12 +87,14 @@
     </form>
     <p class="subscribe-feedback" id="subscribeFeedback"></p>
 
-    <p class="copyright">&copy; 2026 Ferwap Music Entertainment. All Rights Reserved.</p>
-        <div class="footer-links">
-            <a href="https://ferwap.com/privacy">Privacy Policy</a> | 
-            <a href="https://ferwap.com/terms">Terms of Service</a> | 
-            <a href="https://ferwap.com/copyright">Copyright</a>
-        </div>
+    <!-- Footer yang Telah Dirapikan -->
+    <footer class="site-footer">
+      <p class="copyright">&copy; <span id="year">2026</span> Ferwap Music Entertainment. All Rights Reserved.</p>
+      <div class="footer-links">
+        <a href="https://ferwap.com/privacy">Privacy Policy</a> | 
+        <a href="https://ferwap.com/terms">Terms of Service</a> | 
+        <a href="https://ferwap.com/copyright">Copyright</a>
+      </div>
     </footer>
   </main>
 
@@ -83,7 +104,10 @@
     const SUPABASE_ANON_KEY = "SUPABASE_ANON_PUBLIC_KEY_ANDA";
     const supabaseClient = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PROJECT_ID_ANDA") ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const yearEl = document.getElementById("year");
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
 
     const subscribeForm = document.getElementById("subscribeForm");
     const subscriberEmail = document.getElementById("subscriberEmail");
