@@ -30,6 +30,11 @@
       text-decoration: none;
     }
 
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
     /* Top Bar: Nama di Kiri, Navigasi di Kanan */
     .top-bar {
       position: fixed;
@@ -310,32 +315,61 @@
       letter-spacing: 0.1em;
     }
 
-    /* Join Section */
+    /* Join / Subscribe Form */
     .join-desc {
       color: #cccccc;
-      margin-bottom: 1.75rem;
-      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
     }
 
-    .join-links {
+    .subscribe-form {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .btn-border-white {
-      display: inline-block;
+      max-width: 480px;
       border: 1px solid #ffffff;
-      padding: 0.9rem 1.65rem;
-      font-size: 0.75rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      transition: all 0.2s;
     }
 
-    .btn-border-white:hover {
+    .subscribe-form input {
+      flex: 1;
+      background: #000000;
+      border: none;
+      color: #ffffff;
+      padding: 0.95rem 1.15rem;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .subscribe-form input::placeholder {
+      color: #777777;
+      letter-spacing: 0.08em;
+    }
+
+    .subscribe-form button {
       background: #ffffff;
       color: #000000;
+      border: none;
+      padding: 0.95rem 1.75rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      transition: opacity 0.2s;
+    }
+
+    .subscribe-form button:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    .subscribe-form button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .subscribe-feedback {
+      margin-top: 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      min-height: 1.2rem;
     }
 
     /* Footer */
@@ -380,6 +414,11 @@
 
       .video-grid {
         grid-template-columns: 1fr;
+      }
+
+      .subscribe-form {
+        flex-direction: column;
+        max-width: 100%;
       }
 
       .top-bar {
@@ -452,31 +491,37 @@
           <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
             <div class="video-poster">WATCH ON YOUTUBE</div>
             <div class="video-meta">
-              <h4>TORU RE (Official Audio / Visual)</h4>
+              <h4>TORU RE</h4>
               <span>ANDER &bull; YOUTUBE</span>
             </div>
           </a>
           <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
             <div class="video-poster">WATCH ON YOUTUBE</div>
             <div class="video-meta">
-              <h4>Kwiregtori (Official Audio / Visual)</h4>
+              <h4>Kwiregtori</h4>
               <span>ANDER &bull; YOUTUBE</span>
             </div>
           </a>
         </div>
       </section>
 
-      <!-- Section 3: JOIN -->
+      <!-- Section 3: JOIN (Berlangganan Email) -->
       <section id="join" class="stream-section">
         <h3 class="section-heading">JOIN</h3>
         <p class="join-desc">
-          Ikuti rilisan terbaru, pembaruan resmi, atau terhubung dengan manajemen Ferwap Music Entertainment.
+          Dapatkan pemberitahuan rilisan lagu dan video terbaru dari ANDER langsung ke email Anda.
         </p>
-        <div class="join-links">
-          <a href="https://open.spotify.com" target="_blank" rel="noopener" class="btn-border-white">FOLLOW ON SPOTIFY</a>
-          <a href="https://www.youtube.com" target="_blank" rel="noopener" class="btn-border-white">SUBSCRIBE YOUTUBE</a>
-          <a href="mailto:management@ferwap.com" class="btn-border-white">MANAGEMENT@FERWAP.COM</a>
-        </div>
+        <form class="subscribe-form" id="subscribeForm">
+          <input
+            type="email"
+            id="subscriberEmail"
+            placeholder="ALAMAT EMAIL ANDA"
+            required
+            aria-label="Alamat Email"
+          />
+          <button type="submit" id="subscribeBtn">SUBSCRIBE</button>
+        </form>
+        <p class="subscribe-feedback" id="subscribeFeedback"></p>
       </section>
 
       <footer class="stream-footer">
@@ -541,6 +586,11 @@
     const latestLinks = document.getElementById("latestLinks");
     const catalogList = document.getElementById("catalogList");
     const videoGrid = document.getElementById("videoGrid");
+
+    const subscribeForm = document.getElementById("subscribeForm");
+    const subscriberEmail = document.getElementById("subscriberEmail");
+    const subscribeBtn = document.getElementById("subscribeBtn");
+    const subscribeFeedback = document.getElementById("subscribeFeedback");
 
     document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -640,6 +690,36 @@
         })
         .join("");
     }
+
+    // Form Berlangganan (Simpan ke Supabase)
+    subscribeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = subscriberEmail.value.trim();
+      if (!email) return;
+
+      subscribeBtn.disabled = true;
+      subscribeBtn.textContent = "SAVING...";
+      subscribeFeedback.textContent = "";
+
+      if (supabaseClient) {
+        const { error } = await supabaseClient
+          .from("artist_subscribers")
+          .insert([{ artist_slug: "ander", email }]);
+
+        if (error && error.code !== "23505") {
+          subscribeFeedback.textContent = "GAGAL MENDAFTAR. SILAKAN COBA LAGI.";
+        } else {
+          subscribeFeedback.textContent = "TERIMA KASIH. EMAIL ANDA TELAH TERDAFTAR.";
+          subscriberEmail.value = "";
+        }
+      } else {
+        subscribeFeedback.textContent = "TERIMA KASIH. EMAIL ANDA TELAH TERDAFTAR.";
+        subscriberEmail.value = "";
+      }
+
+      subscribeBtn.disabled = false;
+      subscribeBtn.textContent = "SUBSCRIBE";
+    });
 
     init();
   </script>
