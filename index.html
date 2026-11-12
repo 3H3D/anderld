@@ -3,188 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANDER — Official Website | Ferwap Music Entertainment</title>
-  <meta name="description" content="Official website of ANDER. Singer & Songwriter under Ferwap Music Entertainment. Stream TORU RE, Kwiregtori, and Sogdai Ya." />
+  <title>ANDER — Official Website</title>
+  <meta name="description" content="Situs resmi ANDER, solo singer-songwriter di bawah naungan Ferwap Music Entertainment." />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header class="site-header" id="siteHeader">
-    <div class="nav-inner">
-      <a href="#" class="brand-logo">ANDER</a>
-      <nav class="nav-menu">
-        <a href="#releases">Music</a>
-        <a href="#spotlight">Spotlight</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">ANDER</a>
+      <nav class="nav">
+        <a href="#katalog">Katalog</a>
+        <a href="#tentang">Tentang</a>
+        <a href="#kontak">Kontak</a>
       </nav>
-      <a href="#releases" class="nav-cta">Listen Now</a>
     </div>
   </header>
 
-  <!-- Full-Viewport Cinematic Hero -->
-  <section class="hero-stage">
-    <div class="hero-backdrop" id="heroBackdrop"></div>
-    <div class="hero-overlay"></div>
+  <main class="main">
+    <!-- Hero / Pengantar Utama -->
+    <section class="hero">
+      <span class="label">Ferwap Music Entertainment</span>
+      <h1>ANDER</h1>
+      <p class="subtitle">Solo singer-songwriter dan musisi independen.</p>
+    </section>
 
-    <div class="hero-content">
-      <div class="hero-eyebrow">
-        <span class="dot"></span>
-        <span>OUT NOW &bull; FERWAP MUSIC ENTERTAINMENT</span>
-      </div>
-
-      <h1 class="hero-display" id="heroTrackTitle">TORU RE</h1>
-      <p class="hero-subtitle">
-        Single terbaru dari <strong>ANDER</strong>. Tersedia di seluruh platform streaming digital.
-      </p>
-
-      <div class="hero-cta-group">
-        <button class="btn-solid" id="heroPlayBtn" disabled>
-          <span class="icon-play">&#9654;</span> Putar Pratinjau
-        </button>
-        <a href="#releases" class="btn-glass">Jelajahi Diskografi</a>
-      </div>
-    </div>
-
-    <div class="scroll-cue">
-      <span>SCROLL</span>
-      <div class="scroll-line"></div>
-    </div>
-  </section>
-
-  <main>
-    <!-- Discography Grid (Artwork First) -->
-    <section id="releases" class="section-block">
-      <div class="section-head">
-        <div>
-          <span class="kicker">DISCOGRAPHY</span>
-          <h2>Rilisan Resmi</h2>
-        </div>
-        <p class="section-desc">Katalog single pilihan ANDER di bawah naungan Ferwap Music Entertainment.</p>
-      </div>
-
-      <div class="discography-grid" id="discographyGrid">
-        <p class="state-msg">Memuat katalog rilisan...</p>
+    <!-- Daftar Katalog Rilisan -->
+    <section id="katalog" class="section">
+      <h2 class="section-title">Rilisan</h2>
+      <div class="release-stack" id="releaseStack">
+        <p class="text-muted">Memuat daftar rilisan...</p>
       </div>
     </section>
 
-    <!-- Featured Release Spotlight -->
-    <section id="spotlight" class="section-block">
-      <div class="spotlight-panel">
-        <div class="spotlight-art" id="spotlightArt">
-          <div class="art-fallback">
-            <span>ANDER</span>
-            <strong id="spotlightArtTitle">TORU RE</strong>
-          </div>
-        </div>
-
-        <div class="spotlight-body">
-          <span class="kicker">FEATURED RELEASE</span>
-          <h2 id="spotlightTitle">TORU RE</h2>
-          <p class="spotlight-meta" id="spotlightMeta">Single &bull; 2026 &bull; Ferwap Music Entertainment</p>
-          <p class="spotlight-copy">
-            Eksplorasi vokal organik dan penulisan lirik personal yang menjadi ciri khas ANDER. Dengarkan versi lengkapnya melalui layanan streaming favorit Anda.
-          </p>
-
-          <div class="dsp-bar" id="spotlightDsps">
-            <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="dsp-pill">Spotify</a>
-            <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="dsp-pill">Apple Music</a>
-            <a href="https://music.youtube.com" target="_blank" rel="noopener noreferrer" class="dsp-pill">YouTube Music</a>
-          </div>
-        </div>
+    <!-- Tentang Artis -->
+    <section id="tentang" class="section">
+      <h2 class="section-title">Profil</h2>
+      <div class="bio-content">
+        <p>
+          <strong>ANDER</strong> adalah penyanyi dan penulis lagu solo yang berkarya secara independen di bawah naungan <strong>Ferwap Music Entertainment</strong>. Mengutamakan ketulusan vokal dan penulisan lirik yang jujur tanpa gimik berlebih.
+        </p>
+        <p>
+          Katalog awal mencakup single <em>"TORU RE"</em>, <em>"Kwiregtori"</em>, dan <em>"Sogdai Ya"</em>, yang didistribusikan secara resmi ke berbagai platform streaming digital.
+        </p>
       </div>
     </section>
 
-    <!-- Editorial Biography & Official Credits -->
-    <section id="about" class="section-block">
-      <div class="about-layout">
-        <div class="about-narrative">
-          <span class="kicker">ARTIST PROFILE</span>
-          <h2>Suara Jujur dari Jalur Independen.</h2>
-          <p>
-            <strong>ANDER</strong> adalah penyanyi dan penulis lagu solo yang bernaung di bawah label independen <strong>Ferwap Music Entertainment</strong>. Berangkat dari pendekatan produksi yang tulus dan tanpa topeng berlebih, setiap lagu dirancang untuk menyampaikan emosi secara langsung kepada pendengar.
-          </p>
-          <p>
-            Melalui deretan single seperti <em>"TORU RE"</em>, <em>"Kwiregtori"</em>, dan <em>"Sogdai Ya"</em>, ANDER membangun identitas musikal yang otentik serta terdistribusi secara resmi di jaringan musik global.
-          </p>
-        </div>
-
-        <aside class="credits-card">
-          <h3>Official Roster &amp; Credits</h3>
-          <ul class="credits-list">
-            <li>
-              <span>Artist</span>
-              <strong>ANDER</strong>
-            </li>
-            <li>
-              <span>Roles</span>
-              <strong>Singer &bull; Songwriter</strong>
-            </li>
-            <li>
-              <span>Record Label</span>
-              <strong>Ferwap Music Entertainment</strong>
-            </li>
-            <li>
-              <span>Catalog</span>
-              <strong>TORU RE, Kwiregtori, Sogdai Ya</strong>
-            </li>
-          </ul>
-        </aside>
-      </div>
-    </section>
-
-    <!-- Management & Press Contact -->
-    <section id="contact" class="section-block">
-      <div class="management-banner">
-        <div>
-          <span class="kicker">MANAGEMENT &amp; INQUIRIES</span>
-          <h2>Terhubung dengan Tim ANDER</h2>
-          <p>Untuk pertanyaan pers, kolaborasi musik, lisensi sinkronisasi, atau manajemen resmi melalui Ferwap Music Entertainment.</p>
-        </div>
-        <div class="management-actions">
-          <a href="mailto:management@ferwap.com" class="btn-solid">Kirim Email Resmi</a>
-        </div>
+    <!-- Kontak / Manajemen -->
+    <section id="kontak" class="section">
+      <h2 class="section-title">Hubungi</h2>
+      <div class="contact-box">
+        <p>Untuk pertanyaan resmi, kolaborasi, atau keperluan label melalui Ferwap Music Entertainment.</p>
+        <a href="mailto:management@ferwap.com" class="contact-link">management@ferwap.com &rarr;</a>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="footer">
     <div class="footer-inner">
-      <div class="footer-brand">
-        <strong>ANDER</strong>
-        <span>&copy; <span id="year"></span> Ferwap Music Entertainment. All Rights Reserved.</span>
-      </div>
-      <div class="footer-links">
-        <a href="#releases">Music</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </div>
+      <span>&copy; <span id="year"></span> ANDER</span>
+      <span>Ferwap Music Entertainment</span>
     </div>
   </footer>
 
-  <!-- Sticky Bottom Dock Audio Player -->
-  <div class="dock-player hidden" id="dockPlayer">
-    <div class="dock-inner">
-      <div class="dock-track">
-        <div class="dock-thumb" id="dockThumb"></div>
-        <div>
-          <strong id="dockTitle">-</strong>
-          <span>ANDER &bull; Preview</span>
-        </div>
-      </div>
-
-      <div class="dock-controls">
-        <button class="dock-btn" id="dockToggleBtn" aria-label="Play or Pause">&#9654;</button>
-        <div class="dock-progress" id="dockProgressBar">
-          <div class="dock-progress-fill" id="dockProgressFill"></div>
-        </div>
-        <button class="dock-close" id="dockCloseBtn" aria-label="Close Player">&times;</button>
-      </div>
+  <!-- Pemutar Audio Minimalis Bawah -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-info">
+      <strong id="playerTitle">-</strong>
+      <span id="playerStatus">Pratinjau Audio</span>
+    </div>
+    <div class="player-controls">
+      <button class="btn-text" id="playToggleBtn">&#9654; Putar</button>
+      <button class="btn-text" id="closePlayerBtn">&times; Tutup</button>
     </div>
   </div>
 
-  <audio id="realAudioPlayer"></audio>
+  <audio id="audioElement"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/app.js"></script>
