@@ -9,7 +9,7 @@ const supabaseClient =
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
 
-const defaultCatalog = [
+const fallbackReleases = [
   {
     id: "1",
     title: "TORU RE",
@@ -49,23 +49,23 @@ const defaultCatalog = [
 ];
 
 let releases = [];
-let activeIdx = -1;
+let currentIdx = -1;
 let isPlaying = false;
 let audioCtx = null;
-let synthTimer = null;
+let synthLoop = null;
 
-// DOM
-const heroSection = document.getElementById("heroSection");
-const heroTitle = document.getElementById("heroTitle");
-const heroPlayBtn = document.getElementById("heroPlayBtn");
-const heroDsps = document.getElementById("heroDsps");
-const musicGrid = document.getElementById("musicGrid");
+// DOM Elements
+const artistVisual = document.getElementById("artistVisual");
+const latestTitle = document.getElementById("latestTitle");
+const latestPlayBtn = document.getElementById("latestPlayBtn");
+const latestLinks = document.getElementById("latestLinks");
+const catalogList = document.getElementById("catalogList");
 
-const audioBar = document.getElementById("audioBar");
-const npTitle = document.getElementById("npTitle");
-const npToggleBtn = document.getElementById("npToggleBtn");
-const npCloseBtn = document.getElementById("npCloseBtn");
-const audioPlayer = document.getElementById("audioPlayer");
+const playerDock = document.getElementById("playerDock");
+const dockTrackName = document.getElementById("dockTrackName");
+const dockPlayPause = document.getElementById("dockPlayPause");
+const dockClose = document.getElementById("dockClose");
+const audioEngine = document.getElementById("audioEngine");
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -85,68 +85,63 @@ async function init() {
       .eq("is_published", true)
       .order("sort_order", { ascending: true });
 
-    releases = !error && data && data.length > 0 ? data : defaultCatalog;
+    releases = !error && data && data.length > 0 ? data : fallbackReleases;
   } else {
-    releases = defaultCatalog;
+    releases = fallbackReleases;
   }
 
-  renderHero();
-  renderGrid();
+  renderVisualAndLatest();
+  renderCatalogList();
 }
 
-function renderHero() {
-  const fIndex = releases.findIndex((item) => item.is_featured);
-  const idx = fIndex !== -1 ? fIndex : 0;
-  const item = releases[idx];
-  if (!item) return;
+function renderVisualAndLatest() {
+  const fIdx = releases.findIndex((r) => r.is_featured);
+  const idx = fIdx !== -1 ? fIdx : 0;
+  const featured = releases[idx];
+  if (!featured) return;
 
-  heroTitle.textContent = item.title;
+  latestTitle.textContent = featured.title;
 
-  // Jika di Supabase Anda mengisi cover_url (atau url foto artis/sampul),
-  // itu akan otomatis dijadikan background di bagian atas.
-  if (item.cover_url) {
-    heroSection.style.backgroundImage = `url('${encodeURI(item.cover_url)}')`;
+  // Foto Artis / Cover Featured muncul di panel kiri penuh
+  if (featured.cover_url) {
+    artistVisual.style.backgroundImage = `url('${encodeURI(featured.cover_url)}')`;
   }
 
-  heroPlayBtn.disabled = false;
-  heroPlayBtn.onclick = () => playOrPause(idx);
+  latestPlayBtn.disabled = false;
+  latestPlayBtn.onclick = () => toggleAudio(idx);
 
   const links = [];
-  if (item.spotify_url) links.push(`<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>`);
-  if (item.apple_url) links.push(`<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener noreferrer">APPLE MUSIC</a>`);
-  if (item.youtube_url) links.push(`<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC</a>`);
-  if (links.length) heroDsps.innerHTML = links.join("");
+  if (featured.spotify_url) links.push(`<a href="${escapeHTML(featured.spotify_url)}" target="_blank" rel="noopener">SPOTIFY</a>`);
+  if (featured.apple_url) links.push(`<a href="${escapeHTML(featured.apple_url)}" target="_blank" rel="noopener">APPLE</a>`);
+  if (featured.youtube_url) links.push(`<a href="${escapeHTML(featured.youtube_url)}" target="_blank" rel="noopener">YOUTUBE</a>`);
+  if (links.length) latestLinks.innerHTML = links.join("");
 }
 
-function renderGrid() {
-  musicGrid.innerHTML = releases
+function renderCatalogList() {
+  catalogList.innerHTML = releases
     .map((item, idx) => {
-      const playing = idx === activeIdx && isPlaying;
-      const bg = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
-      const fallback = item.cover_url
-        ? ""
-        : `<div class="card-cover-fallback">
-             <span>ANDER</span>
-             <strong>${escapeHTML(item.title)}</strong>
-           </div>`;
+      const active = idx === currentIdx && isPlaying;
+      const thumbStyle = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
+      const thumbLabel = item.cover_url ? "" : "ANDER";
 
       return `
-        <div class="release-card ${playing ? "is-playing" : ""}">
-          <div class="card-cover" ${bg}>
-            ${fallback}
-            <div class="card-overlay">
-              <button class="overlay-btn" onclick="playOrPause(${idx})">
-                ${playing ? "PAUSE" : "LISTEN"}
-              </button>
+        <div class="track-item ${active ? "active" : ""}">
+          <div class="track-left">
+            <div class="track-thumb" ${thumbStyle}>${thumbLabel}</div>
+            <div class="track-details">
+              <h4>${escapeHTML(item.title)}</h4>
+              <span>${escapeHTML(item.release_type || "Single")} &bull; ${escapeHTML(item.release_year || "2026")}</span>
             </div>
           </div>
-          <div class="card-meta">
-            <h3>${escapeHTML(item.title)}</h3>
-            <p>${escapeHTML(item.release_type || "Single")} &bull; ${escapeHTML(item.release_year || "2026")}</p>
-            <div class="card-links">
-              ${item.spotify_url ? `<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>` : ""}
-              ${item.apple_url ? `<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener noreferrer">APPLE</a>` : ""}
-              ${item.youtube_url ? `<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener noreferrer">YOUTUBE</a>` : ""}
+
+          <div class="track-right">
+            <button class="btn-track-play" onclick="toggleAudio(${idx})">
+              ${active ? "PAUSE" : "PLAY"}
+            </button>
+            <div class="track-dsps">
+              ${item.spotify_url ? `<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener">SPOTIFY</a>` : ""}
+              ${item.apple_url ? `<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener">APPLE</a>` : ""}
+              ${item.youtube_url ? `<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener">YT</a>` : ""}
             </div>
           </div>
         </div>
@@ -155,23 +150,23 @@ function renderGrid() {
     .join("");
 }
 
-function stopPlayback(hideBar = false) {
+function stopAudio(hideDock = false) {
   isPlaying = false;
-  clearInterval(synthTimer);
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
-  npToggleBtn.textContent = "PLAY";
-  if (hideBar) audioBar.classList.remove("active");
-  renderGrid();
+  clearInterval(synthLoop);
+  audioEngine.pause();
+  audioEngine.currentTime = 0;
+  dockPlayPause.textContent = "PLAY";
+  if (hideDock) playerDock.classList.remove("show");
+  renderCatalogList();
 }
 
-function startSynth() {
+function playSynth() {
   const notes = [261.63, 329.63, 392.0, 329.63];
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === "suspended") audioCtx.resume();
 
   let step = 0;
-  synthTimer = setInterval(() => {
+  synthLoop = setInterval(() => {
     if (!isPlaying) return;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
@@ -187,38 +182,38 @@ function startSynth() {
   }, 600);
 }
 
-function playOrPause(idx) {
-  if (activeIdx === idx && isPlaying) {
-    stopPlayback(false);
+function toggleAudio(idx) {
+  if (currentIdx === idx && isPlaying) {
+    stopAudio(false);
     return;
   }
 
-  stopPlayback(false);
-  activeIdx = idx;
+  stopAudio(false);
+  currentIdx = idx;
   isPlaying = true;
   const item = releases[idx];
 
-  npTitle.textContent = item.title;
-  npToggleBtn.textContent = "PAUSE";
-  audioBar.classList.add("active");
-  renderGrid();
+  dockTrackName.textContent = item.title;
+  dockPlayPause.textContent = "PAUSE";
+  playerDock.classList.add("show");
+  renderCatalogList();
 
   if (item.audio_url) {
-    audioPlayer.src = item.audio_url;
-    audioPlayer.play();
-    audioPlayer.onended = () => stopPlayback(false);
+    audioEngine.src = item.audio_url;
+    audioEngine.play();
+    audioEngine.onended = () => stopAudio(false);
   } else {
-    startSynth();
+    playSynth();
   }
 }
 
-npToggleBtn.addEventListener("click", () => {
-  if (activeIdx !== -1) playOrPause(activeIdx);
+dockPlayPause.addEventListener("click", () => {
+  if (currentIdx !== -1) toggleAudio(currentIdx);
 });
 
-npCloseBtn.addEventListener("click", () => {
-  stopPlayback(true);
-  activeIdx = -1;
+dockClose.addEventListener("click", () => {
+  stopAudio(true);
+  currentIdx = -1;
 });
 
 init();
