@@ -42,12 +42,6 @@
       align-items: center;
     }
 
-    .label-badge {
-      display: inline-block; background: #ffffff; color: #000000;
-      font-size: 0.68rem; font-weight: 900; letter-spacing: 0.18em;
-      padding: 0.25rem 0.6rem; margin-bottom: 1.25rem;
-    }
-
     .main-title {
       font-size: clamp(4rem, 9vw, 7.5rem);
       font-weight: 900;
@@ -92,7 +86,8 @@
       transform: translateY(-2px);
     }
 
-    .stream-footer {
+    /* Footer Section */
+    .site-footer {
       width: 100%;
       max-width: 1100px;
       display: flex;
@@ -103,6 +98,12 @@
       font-weight: 800;
       letter-spacing: 0.14em;
       color: #555555;
+      align-items: center;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
     }
 
     @media (max-width: 960px) {
@@ -110,6 +111,7 @@
       .full-screen-center { padding: calc(70px + 2rem) 1.5rem 2rem; }
       .top-bar { padding: 1.25rem 1.5rem; }
       .menu-items { gap: 1.25rem; }
+      .site-footer { flex-direction: column; text-align: center; gap: 0.75rem; }
     }
   </style>
 </head>
@@ -154,25 +156,22 @@
       </div>
     </div>
 
-      <!-- Footer Section -->
+    <!-- Footer Section -->
     <footer class="site-footer">
-        <div class="social-icons">
-            <a href="https://www.facebook.com/ferwapmusic" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/ferwapmusic" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="ferwapmusic.info@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
-        </div>
-        <p class="copyright">&copy; 2026 Ferwap Music Entertainment. All Rights Reserved.</p>
-        <div class="footer-links">
-            <a href="privacy">Privacy Policy</a> | 
-            <a href="terms">Terms of Service</a> | 
-            <a href="copyright">Copyright</a>
-        </div>
+      <p class="copyright">&copy; <span id="year">2026</span> Ferwap Music Entertainment. All Rights Reserved.</p>
+      <div class="footer-links">
+        <a href="https://ferwap.com/privacy">Privacy Policy</a> | 
+        <a href="https://ferwap.com/terms">Terms of Service</a> | 
+        <a href="https://ferwap.com/copyright">Copyright</a>
+      </div>
     </footer>
-
   </main>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const yearEl = document.getElementById("year");
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
   </script>
 </body>
 </html>
