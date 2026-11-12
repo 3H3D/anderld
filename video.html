@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANDER — Official Videos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: #000000; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.6; }
+    body { background-color: #000000; color: #ffffff; }
+    a { color: inherit; text-decoration: none; }
+
+    .top-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2.5rem; background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(8px); border-bottom: 1px solid #ffffff;
+    }
+    .artist-mark { font-size: 1.25rem; font-weight: 900; letter-spacing: 0.25em; }
+    .menu-items { display: flex; gap: 2.5rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.18em; color: #aaaaaa; }
+    .menu-items a:hover, .menu-items a.active { color: #ffffff; text-decoration: underline; text-underline-offset: 5px; }
+
+    .main-container { max-width: 1000px; margin: 0 auto; padding: 8rem 2rem 5rem; }
+    .page-title { font-size: 2rem; font-weight: 900; letter-spacing: 0.2em; margin-bottom: 3rem; border-bottom: 1px solid #ffffff; padding-bottom: 1rem; }
+
+    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .video-card { border: 1px solid #333333; background: #0a0a0a; display: flex; flex-direction: column; transition: border-color 0.2s; }
+    .video-card:hover { border-color: #ffffff; }
+    .video-poster { aspect-ratio: 16 / 9; background-color: #141414; background-size: cover; background-position: center; border-bottom: 1px solid #333333; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.2em; }
+    .video-meta { padding: 1.25rem; }
+    .video-meta h4 { font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+    .video-meta span { font-size: 0.75rem; color: #888888; font-weight: 700; letter-spacing: 0.1em; }
+
+    .stream-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #777777; margin-top: 6rem; border-top: 1px solid #333; padding-top: 2rem; }
+
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; }
+      .top-bar { padding: 1.25rem 1.5rem; }
+      .menu-items { gap: 1.25rem; }
+      .main-container { padding: 7rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body id="video-page">
+
+  <header class="top-bar">
+    <a href="index.html" class="artist-mark">ANDER</a>
+    <nav class="menu-items">
+      <a href="index.html" class="nav-home">HOME</a>
+      <a href="music.html">MUSIC</a>
+      <a href="video.html" class="active">VIDEO</a>
+      <a href="join.html">JOIN</a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <h1 class="page-title">VIDEOS</h1>
+    
+    <div class="video-grid" id="videoGrid">
+      <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
+        <div class="video-poster">WATCH ON YOUTUBE</div>
+        <div class="video-meta">
+          <h4>TORU RE</h4>
+          <span>ANDER &bull; YOUTUBE</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
+        <div class="video-poster">WATCH ON YOUTUBE</div>
+        <div class="video-meta">
+          <h4>Kwiregtori</h4>
+          <span>ANDER &bull; YOUTUBE</span>
+        </div>
+      </a>
+    </div>
+
+    <footer class="stream-footer">
+      <span>&copy; <span id="year"></span> ANDER. ALL RIGHTS RESERVED.</span>
+      <span>FERWAP MUSIC ENTERTAINMENT</span>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://PROJECT_ID_ANDA.supabase.co";
+    const SUPABASE_ANON_KEY = "SUPABASE_ANON_PUBLIC_KEY_ANDA";
+    const supabaseClient = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PROJECT_ID_ANDA") ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    async function initVideo() {
+      if (!supabaseClient) return;
+      const { data } = await supabaseClient.from("artist_releases").select("*").eq("artist_slug", "ander").eq("is_published", true).not("youtube_url", "is", null);
+      if (data && data.length > 0) {
+        document.getElementById("videoGrid").innerHTML = data.map(item => {
+          const posterStyle = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
+          return `
+            <a href="${item.youtube_url}" target="_blank" rel="noopener" class="video-card">
+              <div class="video-poster" ${posterStyle}>${item.cover_url ? "" : "WATCH VIDEO"}</div>
+              <div class="video-meta">
+                <h4>${item.title}</h4>
+                <span>ANDER &bull; ${item.release_year || "2026"}</span>
+              </div>
+            </a>
+          `;
+        }).join("");
+      }
+    }
+    initVideo();
+  </script>
+</body>
+</html>
