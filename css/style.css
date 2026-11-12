@@ -1,10 +1,11 @@
 :root {
   --bg: #000000;
-  --surface: #0e0e0e;
-  --surface-2: #161616;
-  --border: #242424;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --border: #ffffff;
+  --border-subtle: #333333;
   --text: #ffffff;
-  --muted: #8e8e8e;
+  --muted: #888888;
   --max-w: 1120px;
 }
 
@@ -41,7 +42,7 @@ button {
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -56,8 +57,8 @@ button:disabled {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(0, 0, 0, 0.92);
-  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .nav-wrap {
@@ -71,7 +72,7 @@ button:disabled {
 
 .brand {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.22em;
 }
 
@@ -88,83 +89,68 @@ button:disabled {
   color: var(--text);
 }
 
-/* Featured Release Box */
-.featured-section {
-  padding: 4rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.featured-box {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 3.5rem;
-  align-items: center;
-}
-
-.featured-cover {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  background-color: var(--surface-2);
+/* Hero Section dengan Background Foto Artis */
+.hero-section {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 6rem 0 4rem;
+  background-color: #111;
   background-size: cover;
   background-position: center;
-  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.cover-placeholder {
+/* Overlay hitam pekat agar teks putih kontras tajam di atas foto */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.4) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  height: 100%;
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
-.featured-cover.has-img .cover-placeholder {
-  display: none;
-}
-
-.cover-placeholder span {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-}
-
-.cover-placeholder strong {
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.hero-inner-box {
+  max-width: 680px;
 }
 
 .tag {
   display: inline-block;
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--muted);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--bg);
+  background: var(--text);
+  padding: 0.25rem 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-transform: uppercase;
   margin-bottom: 0.75rem;
 }
 
-.featured-details h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  line-height: 1.05;
-  text-transform: uppercase;
-  margin-bottom: 0.65rem;
-}
-
-.artist-credit {
+.hero-credit {
   font-size: 0.95rem;
-  color: var(--muted);
+  font-weight: 600;
+  color: #cccccc;
   margin-bottom: 2rem;
 }
 
 .action-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.85rem;
+  gap: 1rem;
   margin-bottom: 1.75rem;
 }
 
@@ -172,9 +158,9 @@ button:disabled {
   background: var(--text);
   color: var(--bg);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.14em;
-  padding: 0.95rem 1.75rem;
+  padding: 1rem 2rem;
   transition: opacity 0.2s;
 }
 
@@ -187,9 +173,9 @@ button:disabled {
   border: 1px solid var(--text);
   color: var(--text);
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.14em;
-  padding: 0.95rem 1.75rem;
+  padding: 1rem 2rem;
   transition: background 0.2s, color 0.2s;
 }
 
@@ -201,9 +187,9 @@ button:disabled {
 .dsp-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 1.5rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.12em;
   color: var(--muted);
 }
@@ -216,21 +202,21 @@ button:disabled {
 
 /* Standard Section */
 .section {
-  padding: 4.5rem 0;
-  border-bottom: 1px solid var(--border);
+  padding: 5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .section-top {
-  margin-bottom: 2.25rem;
+  margin-bottom: 2.5rem;
 }
 
 .section-top h2 {
   font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-weight: 900;
+  letter-spacing: 0.2em;
 }
 
-/* Music Grid (3 Columns RCA Album Grid) */
+/* Music Grid (3 Columns) */
 .music-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -249,14 +235,14 @@ button:disabled {
   background: var(--surface-2);
   background-size: cover;
   background-position: center;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   margin-bottom: 1rem;
   overflow: hidden;
 }
 
 .card-cover-fallback {
   height: 100%;
-  padding: 1.25rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -264,21 +250,21 @@ button:disabled {
 
 .card-cover-fallback span {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.18em;
   color: var(--muted);
 }
 
 .card-cover-fallback strong {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 1.35rem;
+  font-weight: 900;
   text-transform: uppercase;
 }
 
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -295,10 +281,10 @@ button:disabled {
   border: 1px solid var(--text);
   background: var(--bg);
   color: var(--text);
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 800;
   letter-spacing: 0.15em;
-  padding: 0.65rem 1.2rem;
+  padding: 0.75rem 1.4rem;
 }
 
 .release-card.is-playing .overlay-btn {
@@ -307,24 +293,24 @@ button:disabled {
 }
 
 .card-meta h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
 }
 
 .card-meta p {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--muted);
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.75rem;
 }
 
 .card-links {
   display: flex;
-  gap: 0.85rem;
-  font-size: 0.72rem;
-  font-weight: 700;
+  gap: 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
   letter-spacing: 0.1em;
   color: var(--muted);
 }
@@ -341,39 +327,39 @@ button:disabled {
 }
 
 .about-bio p {
-  color: #cccccc;
-  font-size: 0.98rem;
-  line-height: 1.75;
-  margin-bottom: 1rem;
+  color: #dddddd;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
 }
 
 .about-info {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border-subtle);
   padding-left: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .info-item span {
   display: block;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.16em;
   color: var(--muted);
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
 }
 
 .info-item strong {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 /* Contact Strip */
 .contact-strip {
   background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 2rem;
+  border: 1px solid var(--border-subtle);
+  padding: 2.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -383,19 +369,20 @@ button:disabled {
 
 .contact-strip strong {
   display: block;
-  font-size: 0.88rem;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.3rem;
 }
 
 .contact-strip p {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--muted);
 }
 
 /* Footer */
 .footer {
-  padding: 2.5rem 0;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .footer-wrap {
@@ -403,45 +390,45 @@ button:disabled {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
   font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--muted);
 }
 
 .footer-left {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .footer-left strong {
   color: var(--text);
-  font-size: 0.9rem;
-  letter-spacing: 0.2em;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
 }
 
 .footer-right {
   display: flex;
-  gap: 1.5rem;
-  font-weight: 700;
+  gap: 1.75rem;
+  font-weight: 800;
 }
 
 .footer-right a:hover {
   color: var(--text);
 }
 
-/* Bottom Audio Bar */
+/* Audio Bar */
 .audio-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 90;
-  background: var(--surface-2);
+  background: var(--surface);
   border-top: 1px solid var(--border);
-  padding: 0.85rem 0;
+  padding: 1rem 0;
   display: none;
 }
 
@@ -458,30 +445,30 @@ button:disabled {
 .now-playing {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .np-label {
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 0.7rem;
+  font-weight: 900;
   letter-spacing: 0.16em;
-  padding: 0.2rem 0.5rem;
+  padding: 0.25rem 0.6rem;
   background: var(--text);
   color: var(--bg);
 }
 
 .now-playing strong {
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .np-controls {
   display: flex;
-  gap: 1.25rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  gap: 1.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
 }
 
 .np-controls button:hover {
@@ -489,15 +476,6 @@ button:disabled {
 }
 
 @media (max-width: 860px) {
-  .featured-box {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .featured-cover {
-    max-width: 360px;
-  }
-
   .music-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -508,7 +486,7 @@ button:disabled {
 
   .about-info {
     border-left: none;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border-subtle);
     padding-left: 0;
     padding-top: 1.5rem;
   }
