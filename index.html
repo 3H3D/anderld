@@ -4,24 +4,411 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ANDER — Official Artist Portal</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <!-- Header Minimalis Terapung -->
+    html {
+      scroll-behavior: smooth;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Top Bar: Nama di Kiri, Navigasi di Kanan */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2.5rem;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .artist-mark {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+    }
+
+    .menu-items {
+      display: flex;
+      gap: 2.5rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: #aaaaaa;
+    }
+
+    .menu-items a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    /* Split Screen Layout */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 45% 55%;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+
+    /* Sisi Kiri: Foto Artis Full */
+    .artist-visual {
+      position: sticky;
+      top: 70px;
+      height: calc(100vh - 70px);
+      background-color: #111111;
+      background-size: cover;
+      background-position: center;
+      border-right: 1px solid #ffffff;
+      display: flex;
+      align-items: flex-end;
+      padding: 3rem;
+    }
+
+    .visual-tint {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.4) 100%);
+      z-index: 1;
+    }
+
+    .visual-caption {
+      position: relative;
+      z-index: 2;
+    }
+
+    .label-badge {
+      display: inline-block;
+      background: #ffffff;
+      color: #000000;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      padding: 0.25rem 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .main-title {
+      font-size: clamp(3.5rem, 6vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: #cccccc;
+    }
+
+    /* Sisi Kanan: Konten */
+    .content-stream {
+      padding: 4rem 4.5rem 6rem;
+      background-color: #000000;
+    }
+
+    /* Latest Drop */
+    .latest-drop {
+      padding-bottom: 4rem;
+      border-bottom: 1px solid #ffffff;
+      margin-bottom: 4rem;
+    }
+
+    .eyebrow {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      color: #888888;
+      margin-bottom: 0.5rem;
+    }
+
+    .latest-drop h2 {
+      font-size: clamp(2.2rem, 4vw, 3.25rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .streaming-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    .streaming-pills a {
+      border: 1px solid #ffffff;
+      padding: 0.85rem 1.6rem;
+      transition: all 0.2s;
+    }
+
+    .streaming-pills a:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    /* Stream Sections */
+    .stream-section {
+      padding-bottom: 4rem;
+      border-bottom: 1px solid #333333;
+      margin-bottom: 4rem;
+    }
+
+    .section-heading {
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      margin-bottom: 2rem;
+      color: #ffffff;
+    }
+
+    /* Music Catalog List */
+    .catalog-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-top: 1px solid #333333;
+      gap: 1rem;
+    }
+
+    .track-item:last-child {
+      border-bottom: 1px solid #333333;
+    }
+
+    .track-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .track-thumb {
+      width: 56px;
+      height: 56px;
+      background-color: #141414;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #ffffff;
+      display: grid;
+      place-items: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .track-details h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .track-details span {
+      font-size: 0.78rem;
+      color: #888888;
+      font-weight: 600;
+    }
+
+    .track-dsps {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #aaaaaa;
+    }
+
+    .track-dsps a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* Video Grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .video-card {
+      border: 1px solid #333333;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s;
+    }
+
+    .video-card:hover {
+      border-color: #ffffff;
+    }
+
+    .video-poster {
+      aspect-ratio: 16 / 9;
+      background-color: #141414;
+      background-size: cover;
+      background-position: center;
+      border-bottom: 1px solid #333333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+    }
+
+    .video-meta {
+      padding: 1rem;
+    }
+
+    .video-meta h4 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .video-meta span {
+      font-size: 0.72rem;
+      color: #888888;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    /* Join Section */
+    .join-desc {
+      color: #cccccc;
+      margin-bottom: 1.75rem;
+      font-size: 0.95rem;
+    }
+
+    .join-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-border-white {
+      display: inline-block;
+      border: 1px solid #ffffff;
+      padding: 0.9rem 1.65rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      transition: all 0.2s;
+    }
+
+    .btn-border-white:hover {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    /* Footer */
+    .stream-footer {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #777777;
+    }
+
+    /* Responsif HP: Sembunyikan menu HOME di layar <= 960px */
+    @media (max-width: 960px) {
+      .nav-home {
+        display: none;
+      }
+
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .artist-visual {
+        position: relative;
+        top: 0;
+        height: 60vh;
+        border-right: none;
+        border-bottom: 1px solid #ffffff;
+        padding: 2rem 1.5rem;
+      }
+
+      .content-stream {
+        padding: 3rem 1.5rem 5rem;
+      }
+
+      .track-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top-bar {
+        padding: 1.25rem 1.5rem;
+      }
+
+      .menu-items {
+        gap: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body id="home">
+
+  <!-- Top Bar: Nama di Kiri, Navigasi di Kanan -->
   <header class="top-bar">
-    <a href="#" class="artist-mark">ANDER</a>
+    <a href="#home" class="artist-mark">ANDER</a>
     <nav class="menu-items">
-      <a href="#discography">RELEASES</a>
-      <a href="#biography">BIO</a>
-      <a href="#inquiries">CONTACT</a>
+      <a href="#home" class="nav-home">HOME</a>
+      <a href="#music">MUSIC</a>
+      <a href="#video">VIDEO</a>
+      <a href="#join">JOIN</a>
     </nav>
   </header>
 
-  <!-- Tata Letak Utama Split Screen (Foto Artis Kiri, Konten Kanan) -->
+  <!-- Split Layout -->
   <div class="split-layout">
     
-    <!-- SISI KIRI: FOTO ARTIS FULL HEIGHT (FIXED DI DESKTOP) -->
+    <!-- Sisi Kiri: Foto Artis -->
     <aside class="artist-visual" id="artistVisual">
       <div class="visual-tint"></div>
       <div class="visual-caption">
@@ -31,72 +418,67 @@
       </div>
     </aside>
 
-    <!-- SISI KANAN: KONTEN SCROLLABLE -->
+    <!-- Sisi Kanan: Konten Portofolio -->
     <main class="content-stream">
 
-      <!-- Spotlight Single Terbaru -->
+      <!-- Latest Single -->
       <section class="latest-drop">
         <div class="drop-header">
-          <span class="eyebrow">LATEST SINGLE</span>
+          <span class="eyebrow">LATEST RELEASE</span>
           <h2 id="latestTitle">TORU RE</h2>
         </div>
         
         <div class="drop-controls">
-          <button class="btn-solid-white" id="latestPlayBtn" disabled>&#9654; PLAY PREVIEW</button>
           <div class="streaming-pills" id="latestLinks">
             <a href="https://open.spotify.com" target="_blank" rel="noopener">SPOTIFY</a>
-            <a href="https://music.apple.com" target="_blank" rel="noopener">APPLE</a>
-            <a href="https://music.youtube.com" target="_blank" rel="noopener">YOUTUBE</a>
+            <a href="https://music.apple.com" target="_blank" rel="noopener">APPLE MUSIC</a>
+            <a href="https://music.youtube.com" target="_blank" rel="noopener">YOUTUBE MUSIC</a>
           </div>
         </div>
       </section>
 
-      <!-- Katalog Musik (List Editorial Rapi) -->
-      <section id="discography" class="stream-section">
-        <h3 class="section-heading">DISCOGRAPHY</h3>
+      <!-- Section 1: MUSIC -->
+      <section id="music" class="stream-section">
+        <h3 class="section-heading">MUSIC</h3>
         <div class="catalog-list" id="catalogList">
-          <p class="loading-state">Loading catalog...</p>
+          <p style="color: #888; font-size: 0.9rem;">Memuat katalog lagu...</p>
         </div>
       </section>
 
-      <!-- Biografi -->
-      <section id="biography" class="stream-section">
-        <h3 class="section-heading">BIOGRAPHY</h3>
-        <div class="bio-text">
-          <p>
-            <strong>ANDER</strong> adalah penyanyi dan penulis lagu solo independen di bawah naungan <strong>Ferwap Music Entertainment</strong>. Mengedepankan karakter vokal organik dan penulisan lirik yang jujur tanpa gimik berlebih.
-          </p>
-          <p>
-            Rilisan resmi meliputi single <em>"TORU RE"</em>, <em>"Kwiregtori"</em>, dan <em>"Sogdai Ya"</em> yang tersedia di seluruh platform streaming digital.
-          </p>
-        </div>
-
-        <div class="meta-grid">
-          <div>
-            <span>ARTIST</span>
-            <strong>ANDER</strong>
-          </div>
-          <div>
-            <span>LABEL</span>
-            <strong>Ferwap Music Ent.</strong>
-          </div>
-          <div>
-            <span>GENRE</span>
-            <strong>Independent / Vocal</strong>
-          </div>
+      <!-- Section 2: VIDEO -->
+      <section id="video" class="stream-section">
+        <h3 class="section-heading">VIDEO</h3>
+        <div class="video-grid" id="videoGrid">
+          <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
+            <div class="video-poster">WATCH ON YOUTUBE</div>
+            <div class="video-meta">
+              <h4>TORU RE (Official Audio / Visual)</h4>
+              <span>ANDER &bull; YOUTUBE</span>
+            </div>
+          </a>
+          <a href="https://www.youtube.com" target="_blank" rel="noopener" class="video-card">
+            <div class="video-poster">WATCH ON YOUTUBE</div>
+            <div class="video-meta">
+              <h4>Kwiregtori (Official Audio / Visual)</h4>
+              <span>ANDER &bull; YOUTUBE</span>
+            </div>
+          </a>
         </div>
       </section>
 
-      <!-- Kontak & Manajemen -->
-      <section id="inquiries" class="stream-section">
-        <h3 class="section-heading">MANAGEMENT</h3>
-        <p class="contact-desc">
-          Untuk pertanyaan pers, lisensi karya, atau kerja sama resmi melalui Ferwap Music Entertainment.
+      <!-- Section 3: JOIN -->
+      <section id="join" class="stream-section">
+        <h3 class="section-heading">JOIN</h3>
+        <p class="join-desc">
+          Ikuti rilisan terbaru, pembaruan resmi, atau terhubung dengan manajemen Ferwap Music Entertainment.
         </p>
-        <a href="mailto:management@ferwap.com" class="btn-border-white">MANAGEMENT@FERWAP.COM</a>
+        <div class="join-links">
+          <a href="https://open.spotify.com" target="_blank" rel="noopener" class="btn-border-white">FOLLOW ON SPOTIFY</a>
+          <a href="https://www.youtube.com" target="_blank" rel="noopener" class="btn-border-white">SUBSCRIBE YOUTUBE</a>
+          <a href="mailto:management@ferwap.com" class="btn-border-white">MANAGEMENT@FERWAP.COM</a>
+        </div>
       </section>
 
-      <!-- Footer -->
       <footer class="stream-footer">
         <span>&copy; <span id="year"></span> ANDER. ALL RIGHTS RESERVED.</span>
         <span>FERWAP MUSIC ENTERTAINMENT</span>
@@ -105,21 +487,161 @@
     </main>
   </div>
 
-  <!-- Audio Bar Bawah -->
-  <div class="player-dock" id="playerDock">
-    <div class="dock-left">
-      <span class="dock-tag">PREVIEW</span>
-      <strong id="dockTrackName">-</strong>
-    </div>
-    <div class="dock-right">
-      <button id="dockPlayPause">PAUSE</button>
-      <button id="dockClose">CLOSE</button>
-    </div>
-  </div>
-
-  <audio id="audioEngine"></audio>
-
+  <!-- Script Supabase & Logika Data -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/app.js"></script>
+  <script>
+    const SUPABASE_URL = "https://PROJECT_ID_ANDA.supabase.co";
+    const SUPABASE_ANON_KEY = "SUPABASE_ANON_PUBLIC_KEY_ANDA";
+
+    const supabaseClient =
+      SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PROJECT_ID_ANDA")
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+    const fallbackReleases = [
+      {
+        id: "1",
+        title: "TORU RE",
+        release_type: "Single",
+        release_year: "2026",
+        cover_url: "",
+        spotify_url: "https://open.spotify.com",
+        apple_url: "https://music.apple.com",
+        youtube_url: "https://music.youtube.com",
+        is_featured: true
+      },
+      {
+        id: "2",
+        title: "Kwiregtori",
+        release_type: "Single",
+        release_year: "2026",
+        cover_url: "",
+        spotify_url: "https://open.spotify.com",
+        apple_url: "https://music.apple.com",
+        youtube_url: "https://music.youtube.com",
+        is_featured: false
+      },
+      {
+        id: "3",
+        title: "Sogdai Ya",
+        release_type: "Single",
+        release_year: "2026",
+        cover_url: "",
+        spotify_url: "https://open.spotify.com",
+        apple_url: "https://music.apple.com",
+        youtube_url: "https://music.youtube.com",
+        is_featured: false
+      }
+    ];
+
+    let releases = [];
+
+    const artistVisual = document.getElementById("artistVisual");
+    const latestTitle = document.getElementById("latestTitle");
+    const latestLinks = document.getElementById("latestLinks");
+    const catalogList = document.getElementById("catalogList");
+    const videoGrid = document.getElementById("videoGrid");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function escapeHTML(str) {
+      if (!str) return "";
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+
+    async function init() {
+      if (supabaseClient) {
+        const { data, error } = await supabaseClient
+          .from("artist_releases")
+          .select("*")
+          .eq("artist_slug", "ander")
+          .eq("is_published", true)
+          .order("sort_order", { ascending: true });
+
+        releases = !error && data && data.length > 0 ? data : fallbackReleases;
+      } else {
+        releases = fallbackReleases;
+      }
+
+      renderVisualAndLatest();
+      renderCatalogList();
+      renderVideoList();
+    }
+
+    function renderVisualAndLatest() {
+      const fIdx = releases.findIndex((r) => r.is_featured);
+      const idx = fIdx !== -1 ? fIdx : 0;
+      const featured = releases[idx];
+      if (!featured) return;
+
+      latestTitle.textContent = featured.title;
+
+      if (featured.cover_url) {
+        artistVisual.style.backgroundImage = `url('${encodeURI(featured.cover_url)}')`;
+      }
+
+      const links = [];
+      if (featured.spotify_url) links.push(`<a href="${escapeHTML(featured.spotify_url)}" target="_blank" rel="noopener">SPOTIFY</a>`);
+      if (featured.apple_url) links.push(`<a href="${escapeHTML(featured.apple_url)}" target="_blank" rel="noopener">APPLE MUSIC</a>`);
+      if (featured.youtube_url) links.push(`<a href="${escapeHTML(featured.youtube_url)}" target="_blank" rel="noopener">YOUTUBE MUSIC</a>`);
+      if (links.length) latestLinks.innerHTML = links.join("");
+    }
+
+    function renderCatalogList() {
+      catalogList.innerHTML = releases
+        .map((item) => {
+          const thumbStyle = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
+          const thumbLabel = item.cover_url ? "" : "ANDER";
+
+          const links = [];
+          if (item.spotify_url) links.push(`<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener">SPOTIFY</a>`);
+          if (item.apple_url) links.push(`<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener">APPLE</a>`);
+          if (item.youtube_url) links.push(`<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener">YT</a>`);
+
+          return `
+            <div class="track-item">
+              <div class="track-left">
+                <div class="track-thumb" ${thumbStyle}>${thumbLabel}</div>
+                <div class="track-details">
+                  <h4>${escapeHTML(item.title)}</h4>
+                  <span>${escapeHTML(item.release_type || "Single")} &bull; ${escapeHTML(item.release_year || "2026")}</span>
+                </div>
+              </div>
+
+              <div class="track-dsps">
+                ${links.join("")}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderVideoList() {
+      const videoItems = releases.filter((item) => item.youtube_url);
+      if (videoItems.length === 0) return;
+
+      videoGrid.innerHTML = videoItems
+        .map((item) => {
+          const posterStyle = item.cover_url ? `style="background-image: url('${encodeURI(item.cover_url)}')"` : "";
+          const posterLabel = item.cover_url ? "" : "WATCH VIDEO";
+
+          return `
+            <a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener" class="video-card">
+              <div class="video-poster" ${posterStyle}>${posterLabel}</div>
+              <div class="video-meta">
+                <h4>${escapeHTML(item.title)}</h4>
+                <span>ANDER &bull; ${escapeHTML(item.release_year || "2026")}</span>
+              </div>
+            </a>
+          `;
+        })
+        .join("");
+    }
+
+    init();
+  </script>
 </body>
 </html>
