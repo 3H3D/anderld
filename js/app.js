@@ -55,11 +55,10 @@ let audioCtx = null;
 let synthTimer = null;
 
 // DOM
-const featuredCover = document.getElementById("featuredCover");
-const featuredArtText = document.getElementById("featuredArtText");
-const featuredTitle = document.getElementById("featuredTitle");
-const featuredPlayBtn = document.getElementById("featuredPlayBtn");
-const featuredDsps = document.getElementById("featuredDsps");
+const heroSection = document.getElementById("heroSection");
+const heroTitle = document.getElementById("heroTitle");
+const heroPlayBtn = document.getElementById("heroPlayBtn");
+const heroDsps = document.getElementById("heroDsps");
 const musicGrid = document.getElementById("musicGrid");
 
 const audioBar = document.getElementById("audioBar");
@@ -91,32 +90,32 @@ async function init() {
     releases = defaultCatalog;
   }
 
-  renderFeatured();
+  renderHero();
   renderGrid();
 }
 
-function renderFeatured() {
+function renderHero() {
   const fIndex = releases.findIndex((item) => item.is_featured);
   const idx = fIndex !== -1 ? fIndex : 0;
   const item = releases[idx];
   if (!item) return;
 
-  featuredTitle.textContent = item.title;
-  featuredArtText.textContent = item.title;
+  heroTitle.textContent = item.title;
 
+  // Jika di Supabase Anda mengisi cover_url (atau url foto artis/sampul),
+  // itu akan otomatis dijadikan background di bagian atas.
   if (item.cover_url) {
-    featuredCover.style.backgroundImage = `url('${encodeURI(item.cover_url)}')`;
-    featuredCover.classList.add("has-img");
+    heroSection.style.backgroundImage = `url('${encodeURI(item.cover_url)}')`;
   }
 
-  featuredPlayBtn.disabled = false;
-  featuredPlayBtn.onclick = () => playOrPause(idx);
+  heroPlayBtn.disabled = false;
+  heroPlayBtn.onclick = () => playOrPause(idx);
 
   const links = [];
   if (item.spotify_url) links.push(`<a href="${escapeHTML(item.spotify_url)}" target="_blank" rel="noopener noreferrer">SPOTIFY</a>`);
   if (item.apple_url) links.push(`<a href="${escapeHTML(item.apple_url)}" target="_blank" rel="noopener noreferrer">APPLE MUSIC</a>`);
   if (item.youtube_url) links.push(`<a href="${escapeHTML(item.youtube_url)}" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC</a>`);
-  if (links.length) featuredDsps.innerHTML = links.join("");
+  if (links.length) heroDsps.innerHTML = links.join("");
 }
 
 function renderGrid() {
