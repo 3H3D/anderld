@@ -14,7 +14,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
       padding: 1.5rem 2.5rem; background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(8px); border-bottom: 1px solid #ffffff;
+      backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a;
     }
     .artist-mark { font-size: 1.25rem; font-weight: 900; letter-spacing: 0.25em; }
     .menu-items { display: flex; gap: 2.5rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.18em; color: #aaaaaa; }
@@ -23,7 +23,7 @@
     .main-container { max-width: 1000px; margin: 0 auto; padding: 8rem 2rem 5rem; }
     .page-title { font-size: 2rem; font-weight: 900; letter-spacing: 0.2em; margin-bottom: 3rem; border-bottom: 1px solid #ffffff; padding-bottom: 1rem; }
 
-    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-bottom: 6rem; }
     .video-card { border: 1px solid #333333; background: #0a0a0a; display: flex; flex-direction: column; transition: border-color 0.2s; }
     .video-card:hover { border-color: #ffffff; }
     .video-poster { aspect-ratio: 16 / 9; background-color: #141414; background-size: cover; background-position: center; border-bottom: 1px solid #333333; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.2em; }
@@ -31,13 +31,31 @@
     .video-meta h4 { font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
     .video-meta span { font-size: 0.75rem; color: #888888; font-weight: 700; letter-spacing: 0.1em; }
 
-    .stream-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: #777777; margin-top: 6rem; border-top: 1px solid #333; padding-top: 2rem; }
+    /* Footer Terstruktur Rapi */
+    .site-footer {
+      border-top: 1px solid #333333;
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #777777;
+      align-items: center;
+    }
+    .footer-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
 
     @media (max-width: 768px) {
       .video-grid { grid-template-columns: 1fr; }
       .top-bar { padding: 1.25rem 1.5rem; }
       .menu-items { gap: 1.25rem; }
       .main-container { padding: 7rem 1.5rem 4rem; }
+      .site-footer { flex-direction: column; text-align: center; gap: 0.75rem; }
     }
   </style>
 </head>
@@ -73,12 +91,14 @@
       </a>
     </div>
 
-    <p class="copyright">&copy; 2026 Ferwap Music Entertainment. All Rights Reserved.</p>
-        <div class="footer-links">
-            <a href="https://ferwap.com/privacy">Privacy Policy</a> | 
-            <a href="https://ferwap.com/terms">Terms of Service</a> | 
-            <a href="https://ferwap.com/copyright">Copyright</a>
-        </div>
+    <!-- Footer yang Telah Dirapikan -->
+    <footer class="site-footer">
+      <p class="copyright">&copy; <span id="year">2026</span> Ferwap Music Entertainment. All Rights Reserved.</p>
+      <div class="footer-links">
+        <a href="https://ferwap.com/privacy">Privacy Policy</a> | 
+        <a href="https://ferwap.com/terms">Terms of Service</a> | 
+        <a href="https://ferwap.com/copyright">Copyright</a>
+      </div>
     </footer>
   </main>
 
@@ -88,7 +108,10 @@
     const SUPABASE_ANON_KEY = "SUPABASE_ANON_PUBLIC_KEY_ANDA";
     const supabaseClient = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PROJECT_ID_ANDA") ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const yearEl = document.getElementById("year");
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
 
     async function initVideo() {
       if (!supabaseClient) return;
