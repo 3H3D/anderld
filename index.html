@@ -3,137 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANDER | Official Site</title>
-  <meta name="description" content="Official site for ANDER. Ferwap Music Entertainment." />
+  <title>ANDER — Official Artist Portal</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-wrap">
-      <a href="#" class="brand">ANDER</a>
-      <nav class="nav-links">
-        <a href="#music">MUSIC</a>
-        <a href="#about">ABOUT</a>
-        <a href="#contact">CONTACT</a>
-      </nav>
-    </div>
+  <!-- Header Minimalis Terapung -->
+  <header class="top-bar">
+    <a href="#" class="artist-mark">ANDER</a>
+    <nav class="menu-items">
+      <a href="#discography">RELEASES</a>
+      <a href="#biography">BIO</a>
+      <a href="#inquiries">CONTACT</a>
+    </nav>
   </header>
 
-  <main>
-    <!-- Hero Section dengan Background Foto Artis -->
-    <section class="hero-section" id="heroSection">
-      <div class="hero-overlay"></div>
-      <div class="container hero-content">
-        <div class="hero-inner-box">
-          <span class="tag">NEW RELEASE</span>
-          <h1 id="heroTitle">TORU RE</h1>
-          <p class="hero-credit">ANDER &bull; Ferwap Music Entertainment</p>
-
-          <div class="action-row">
-            <button class="btn-main" id="heroPlayBtn" disabled>LISTEN PREVIEW</button>
-            <a href="#music" class="btn-outline">ALL RELEASES</a>
-          </div>
-
-          <div class="dsp-row" id="heroDsps">
-            <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">SPOTIFY</a>
-            <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer">APPLE MUSIC</a>
-            <a href="https://music.youtube.com" target="_blank" rel="noopener noreferrer">YOUTUBE MUSIC</a>
-          </div>
-        </div>
+  <!-- Tata Letak Utama Split Screen (Foto Artis Kiri, Konten Kanan) -->
+  <div class="split-layout">
+    
+    <!-- SISI KIRI: FOTO ARTIS FULL HEIGHT (FIXED DI DESKTOP) -->
+    <aside class="artist-visual" id="artistVisual">
+      <div class="visual-tint"></div>
+      <div class="visual-caption">
+        <span class="label-badge">FERWAP MUSIC ENTERTAINMENT</span>
+        <h1 class="main-title">ANDER</h1>
+        <p class="tagline">SINGER &bull; SONGWRITER &bull; INDEPENDENT</p>
       </div>
-    </section>
+    </aside>
 
-    <!-- Music Grid Section -->
-    <section id="music" class="section">
-      <div class="container">
-        <div class="section-top">
-          <h2>MUSIC</h2>
+    <!-- SISI KANAN: KONTEN SCROLLABLE -->
+    <main class="content-stream">
+
+      <!-- Spotlight Single Terbaru -->
+      <section class="latest-drop">
+        <div class="drop-header">
+          <span class="eyebrow">LATEST SINGLE</span>
+          <h2 id="latestTitle">TORU RE</h2>
         </div>
-
-        <div class="music-grid" id="musicGrid">
-          <p class="status-text">Loading catalog...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Official Bio Section -->
-    <section id="about" class="section">
-      <div class="container">
-        <div class="section-top">
-          <h2>ABOUT</h2>
-        </div>
-
-        <div class="about-grid">
-          <div class="about-bio">
-            <p>
-              <strong>ANDER</strong> is an independent solo singer and songwriter signed to <strong>Ferwap Music Entertainment</strong>. Focusing on authentic vocal delivery and direct songwriting, ANDER builds his catalog independently across global streaming platforms.
-            </p>
-            <p>
-              Official releases include <em>"TORU RE"</em>, <em>"Kwiregtori"</em>, and <em>"Sogdai Ya"</em>.
-            </p>
-          </div>
-
-          <div class="about-info">
-            <div class="info-item">
-              <span>ARTIST</span>
-              <strong>ANDER</strong>
-            </div>
-            <div class="info-item">
-              <span>ROLE</span>
-              <strong>Singer / Songwriter</strong>
-            </div>
-            <div class="info-item">
-              <span>LABEL</span>
-              <strong>Ferwap Music Entertainment</strong>
-            </div>
+        
+        <div class="drop-controls">
+          <button class="btn-solid-white" id="latestPlayBtn" disabled>&#9654; PLAY PREVIEW</button>
+          <div class="streaming-pills" id="latestLinks">
+            <a href="https://open.spotify.com" target="_blank" rel="noopener">SPOTIFY</a>
+            <a href="https://music.apple.com" target="_blank" rel="noopener">APPLE</a>
+            <a href="https://music.youtube.com" target="_blank" rel="noopener">YOUTUBE</a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Contact / Management -->
-    <section id="contact" class="section">
-      <div class="container">
-        <div class="section-top">
-          <h2>CONTACT</h2>
+      <!-- Katalog Musik (List Editorial Rapi) -->
+      <section id="discography" class="stream-section">
+        <h3 class="section-heading">DISCOGRAPHY</h3>
+        <div class="catalog-list" id="catalogList">
+          <p class="loading-state">Loading catalog...</p>
+        </div>
+      </section>
+
+      <!-- Biografi -->
+      <section id="biography" class="stream-section">
+        <h3 class="section-heading">BIOGRAPHY</h3>
+        <div class="bio-text">
+          <p>
+            <strong>ANDER</strong> adalah penyanyi dan penulis lagu solo independen di bawah naungan <strong>Ferwap Music Entertainment</strong>. Mengedepankan karakter vokal organik dan penulisan lirik yang jujur tanpa gimik berlebih.
+          </p>
+          <p>
+            Rilisan resmi meliputi single <em>"TORU RE"</em>, <em>"Kwiregtori"</em>, dan <em>"Sogdai Ya"</em> yang tersedia di seluruh platform streaming digital.
+          </p>
         </div>
 
-        <div class="contact-strip">
+        <div class="meta-grid">
           <div>
-            <strong>MANAGEMENT &amp; PRESS INQUIRIES</strong>
-            <p>Ferwap Music Entertainment</p>
+            <span>ARTIST</span>
+            <strong>ANDER</strong>
           </div>
-          <a href="mailto:management@ferwap.com" class="btn-outline">MANAGEMENT@FERWAP.COM</a>
+          <div>
+            <span>LABEL</span>
+            <strong>Ferwap Music Ent.</strong>
+          </div>
+          <div>
+            <span>GENRE</span>
+            <strong>Independent / Vocal</strong>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-wrap">
-      <div class="footer-left">
-        <span>&copy; <span id="year"></span> FERWAP MUSIC ENTERTAINMENT. ALL RIGHTS RESERVED.</span>
-      </div>
-  </footer>
+      <!-- Kontak & Manajemen -->
+      <section id="inquiries" class="stream-section">
+        <h3 class="section-heading">MANAGEMENT</h3>
+        <p class="contact-desc">
+          Untuk pertanyaan pers, lisensi karya, atau kerja sama resmi melalui Ferwap Music Entertainment.
+        </p>
+        <a href="mailto:management@ferwap.com" class="btn-border-white">MANAGEMENT@FERWAP.COM</a>
+      </section>
 
-  <!-- Bottom Audio Bar -->
-  <div class="audio-bar" id="audioBar">
-    <div class="container audio-bar-inner">
-      <div class="now-playing">
-        <span class="np-label">PREVIEW</span>
-        <strong id="npTitle">-</strong>
-      </div>
-      <div class="np-controls">
-        <button id="npToggleBtn">PAUSE</button>
-        <button id="npCloseBtn">CLOSE</button>
-      </div>
+      <!-- Footer -->
+      <footer class="stream-footer">
+        <span>&copy; <span id="year"></span> ANDER. ALL RIGHTS RESERVED.</span>
+        <span>FERWAP MUSIC ENTERTAINMENT</span>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Audio Bar Bawah -->
+  <div class="player-dock" id="playerDock">
+    <div class="dock-left">
+      <span class="dock-tag">PREVIEW</span>
+      <strong id="dockTrackName">-</strong>
+    </div>
+    <div class="dock-right">
+      <button id="dockPlayPause">PAUSE</button>
+      <button id="dockClose">CLOSE</button>
     </div>
   </div>
 
-  <audio id="audioPlayer"></audio>
+  <audio id="audioEngine"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/app.js"></script>
